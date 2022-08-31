@@ -81,7 +81,7 @@ def pregunta_02():
     return res
 
 
-pregunta_02()
+""" pregunta_02() """
 
 def pregunta_03():
     """
