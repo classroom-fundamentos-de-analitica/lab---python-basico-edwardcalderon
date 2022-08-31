@@ -11,6 +11,10 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
+import csv
+import string
+csv_file = csv.reader(open("data.csv", encoding="utf-8"),
+                      delimiter="\t", quotechar='"')
 
 
 def pregunta_01():
@@ -21,7 +25,20 @@ def pregunta_01():
     214
 
     """
-    return
+    dist = 0
+    for row in csv_file:
+        _dist = row[1]
+        try:
+            _dist = int(_dist)
+        except ValueError:
+            _dist = 0
+
+        dist += _dist
+    """ print(dist) """
+    return dist
+
+
+""" pregunta_01() """
 
 
 def pregunta_02():
@@ -39,8 +56,32 @@ def pregunta_02():
     ]
 
     """
-    return
+    letters_list = []
+    column = []
+    for row in csv_file:
+        _dist = row[0]
+        column.append(_dist)
+        if len(letters_list) == 0 or _dist not in letters_list:
+            letters_list.append(_dist)
 
+    letters_list.sort()
+    count = []
+    for letter in letters_list:
+        occurrences = column.count(letter)
+        count.append(occurrences)
+
+    res = []
+    for i in range(len(letters_list)):
+        tupple_rta = letters_list[i], count[i]
+        res.append(tupple_rta)
+
+    """ for items in res:
+        print(items) """
+
+    return res
+
+
+pregunta_02()
 
 def pregunta_03():
     """
