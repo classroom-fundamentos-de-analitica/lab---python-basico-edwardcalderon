@@ -12,7 +12,10 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 """
 import csv
+from hashlib import new
 import string
+from operator import itemgetter
+
 csv_file = csv.reader(open("data.csv", encoding="utf-8"),
                       delimiter="\t", quotechar='"')
 
@@ -75,13 +78,8 @@ def pregunta_02():
         tupple_rta = letters_list[i], count[i]
         res.append(tupple_rta)
 
-    """ for items in res:
-        print(items) """
-
     return res
 
-
-""" pregunta_02() """
 
 def pregunta_03():
     """
@@ -98,9 +96,44 @@ def pregunta_03():
     ]
 
     """
-    return
+    letters_list = []
+    column = []
+    res = []
+    for row in csv_file:
+        _dist = row[0]
+        _value = row[1]
+        if len(letters_list) == 0 or _dist not in letters_list:
+            letters_list.append(_dist)
+            column.append(_value)
+            index = letters_list.index(_dist)
+            tupple_rta = letters_list[index], column[index]
+            res.append(tupple_rta)
+            continue
+        if _dist in letters_list:
+            index = letters_list.index(_dist)
+            tupple_rta = letters_list[index], column[index]
+            res.remove(tupple_rta)
+            column[index] = int(column[index]) + int(_value)
+            tupple_rta = letters_list[index], column[index]
+            res.append(tupple_rta)
 
+    res.sort()
+    """ for items in res:
+        print(items) """
+        
+    return res
 
+def reducer_small_data(sequence):
+    contador = {}
+    for key, value in sequence:
+        contador[key] = contador.get(key, 0) + value
+    return list(contador.items())
+
+def shuffle_and_sort(sequence):
+    f = itemgetter(0)
+    sequence = sorted(sequence, key=f)
+    return sequence
+   
 def pregunta_04():
     """
     La columna 3 contiene una fecha en formato `YYYY-MM-DD`. Retorne la cantidad de
@@ -123,8 +156,15 @@ def pregunta_04():
     ]
 
     """
-    return
+    column = []
+    for row in csv_file:
+        _value = row[2]
+        splited_value = _value.split("-")
+        column.append((splited_value[1],1))
 
+    res = reducer_small_data(column)
+
+    return shuffle_and_sort(res)
 
 def pregunta_05():
     """
