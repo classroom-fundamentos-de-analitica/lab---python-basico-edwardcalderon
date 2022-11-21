@@ -234,9 +234,6 @@ def pregunta_06():
         grouped_max_min_list.append((key, max_elm, min_elm))
     return grouped_max_min_list
 
-print(pregunta_06())
-
-
 def pregunta_07():
     """
     Retorne una lista de tuplas que asocien las columnas 0 y 1. Cada tupla contiene un
