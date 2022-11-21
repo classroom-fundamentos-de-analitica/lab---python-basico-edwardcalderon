@@ -15,6 +15,7 @@ import csv
 from hashlib import new
 import string
 from operator import itemgetter
+from itertools import groupby
 
 csv_file = csv.reader(open("data.csv", encoding="utf-8"),
                       delimiter="\t", quotechar='"')
@@ -181,8 +182,18 @@ def pregunta_05():
     ]
 
     """
-    return
-
+    grouped_max_min_list = []
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[0]), key=lambda x: x[0]):
+        max_elm = float("-inf")
+        min_elm = float("inf")
+        for string_elm in group:
+            num_elm = int(string_elm[1])
+            if num_elm > max_elm:
+                max_elm = num_elm
+            if num_elm < min_elm:
+                min_elm = num_elm
+        grouped_max_min_list.append((key, max_elm, min_elm))
+    return grouped_max_min_list
 
 def pregunta_06():
     """
@@ -206,7 +217,24 @@ def pregunta_06():
     ]
 
     """
-    return
+    grouped_max_min_list = []
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[4]), key=lambda x: x[4]):
+        max_elm = float("-inf")
+        min_elm = float("inf")
+        for string_elm in group:
+            elm = string_elm[4].split(',')
+            for _elm in elm:
+                el_ = _elm.split(':')
+                num_elm = int(el_[1])
+                print(num_elm)
+                if num_elm > max_elm:
+                    max_elm = num_elm
+                if num_elm < min_elm:
+                    min_elm = num_elm
+        grouped_max_min_list.append((key, max_elm, min_elm))
+    return grouped_max_min_list
+
+print(pregunta_06())
 
 
 def pregunta_07():
