@@ -225,8 +225,8 @@ def pregunta_06():
             elm = string_elm[4].split(',')
             for _elm in elm:
                 el_ = _elm.split(':')
+                print(el_)
                 num_elm = int(el_[1])
-                print(num_elm)
                 if num_elm > max_elm:
                     max_elm = num_elm
                 if num_elm < min_elm:
