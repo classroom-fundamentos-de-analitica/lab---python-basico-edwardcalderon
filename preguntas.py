@@ -219,19 +219,18 @@ def pregunta_06():
     """
     grouped_max_min_list = []
     for key, group in groupby(sorted(csv_file, key=lambda x: x[4]), key=lambda x: x[4]):
-        max_elm = float("-inf")
-        min_elm = float("inf")
         for string_elm in group:
             elm = string_elm[4].split(',')
+            max_elm = float("-inf")
+            min_elm = float("inf")
             for _elm in elm:
                 el_ = _elm.split(':')
-                print(el_)
                 num_elm = int(el_[1])
                 if num_elm > max_elm:
                     max_elm = num_elm
                 if num_elm < min_elm:
                     min_elm = num_elm
-        grouped_max_min_list.append((key, max_elm, min_elm))
+                grouped_max_min_list.append((el_[0], max_elm, min_elm))
     return grouped_max_min_list
 
 def pregunta_07():
@@ -255,8 +254,13 @@ def pregunta_07():
     ]
 
     """
-    return
-
+    grouped_max_min_list = []
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[1]), key=lambda x: x[1]):
+        letters = []
+        for string_elm in group:
+            letters.append(string_elm[0])
+        grouped_max_min_list.append((key, letters))
+    return grouped_max_min_list
 
 def pregunta_08():
     """
@@ -280,8 +284,15 @@ def pregunta_08():
     ]
 
     """
-    return
-
+    grouped_max_min_list = []
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[1]), key=lambda x: x[1]):
+        letters = []
+        for string_elm in group:
+            if(string_elm[0] not in letters):
+                letters.append(string_elm[0])
+        letters.sort()        
+        grouped_max_min_list.append((key, letters))
+    return grouped_max_min_list
 
 def pregunta_09():
     """
@@ -303,8 +314,21 @@ def pregunta_09():
     }
 
     """
-    return
-
+    grouped_dict = {}
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[4]), key=lambda x: x[4]):
+        elements = key.split(',')
+        print(elements)
+        for el in elements:
+            key = el.split(":")[0]
+            if(key not in grouped_dict ):
+                print(key)
+                grouped_dict.update({key: 0})
+            if(key in grouped_dict):
+                new_val = grouped_dict.get(key) + 1
+                grouped_dict.update({key: new_val})
+    sorted_list = sorted(grouped_dict.items())
+    d = dict((sorted_list[i]) for i in range(len(sorted_list)))
+    return d
 
 def pregunta_10():
     """
