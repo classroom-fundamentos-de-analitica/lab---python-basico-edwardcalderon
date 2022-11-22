@@ -259,7 +259,7 @@ def pregunta_07():
         letters = []
         for string_elm in group:
             letters.append(string_elm[0])
-        grouped_max_min_list.append((key, letters))
+        grouped_max_min_list.append((int(key), letters))
     return grouped_max_min_list
 
 def pregunta_08():
@@ -291,7 +291,7 @@ def pregunta_08():
             if(string_elm[0] not in letters):
                 letters.append(string_elm[0])
         letters.sort()        
-        grouped_max_min_list.append((key, letters))
+        grouped_max_min_list.append((int(key), letters))
     return grouped_max_min_list
 
 def pregunta_09():
@@ -317,11 +317,9 @@ def pregunta_09():
     grouped_dict = {}
     for key, group in groupby(sorted(csv_file, key=lambda x: x[4]), key=lambda x: x[4]):
         elements = key.split(',')
-        print(elements)
         for el in elements:
             key = el.split(":")[0]
             if(key not in grouped_dict ):
-                print(key)
                 grouped_dict.update({key: 0})
             if(key in grouped_dict):
                 new_val = grouped_dict.get(key) + 1
