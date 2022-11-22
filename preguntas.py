@@ -346,8 +346,13 @@ def pregunta_10():
 
 
     """
-    return
-
+    grouped_list = []
+    for row in csv_file:
+        print(row)
+        col4 = row[3].split(',')
+        col5 = row[4].split(',')
+        grouped_list.append((row[0], len(col4),  len(col5)))
+    return grouped_list
 
 def pregunta_11():
     """
@@ -367,8 +372,19 @@ def pregunta_11():
 
 
     """
-    return
-
+    grouped_dict = {}
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[3]), key=lambda x: x[3]):
+        for el in group:
+            el_key = el[3].split(',')
+            for el_ in el_key:
+                if(el_ not in grouped_dict ):
+                    grouped_dict.update({el_ : int(el[1])})
+                if(el_ in grouped_dict):
+                    new_val = int(grouped_dict.get(el_)) + int(el[1])
+                    grouped_dict.update({el_ : new_val})
+    sorted_list = sorted(grouped_dict.items())
+    d = dict((sorted_list[i]) for i in range(len(sorted_list)))
+    return d
 
 def pregunta_12():
     """
@@ -385,4 +401,15 @@ def pregunta_12():
     }
 
     """
-    return
+    grouped_dict = {}
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[0]), key=lambda x: x[0]):
+        value = 0
+        for el in group:      
+            el_values = el[4].split(',')
+            for el_ in el_values:
+                el_val = el_.split(':')
+                value = value + int(el_val[1])
+            grouped_dict.update({key: value})    
+    sorted_list = sorted(grouped_dict.items())
+    d = dict((sorted_list[i]) for i in range(len(sorted_list)))
+    return d
