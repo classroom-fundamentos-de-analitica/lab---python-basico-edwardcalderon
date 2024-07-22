@@ -11,6 +11,14 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
+import csv
+from hashlib import new
+import string
+from operator import itemgetter
+from itertools import groupby
+
+csv_file = csv.reader(open("data.csv", encoding="utf-8"),
+                      delimiter="\t", quotechar='"')
 
 
 def pregunta_01():
@@ -21,7 +29,20 @@ def pregunta_01():
     214
 
     """
-    return
+    dist = 0
+    for row in csv_file:
+        _dist = row[1]
+        try:
+            _dist = int(_dist)
+        except ValueError:
+            _dist = 0
+
+        dist += _dist
+    """ print(dist) """
+    return dist
+
+
+""" pregunta_01() """
 
 
 def pregunta_02():
@@ -39,7 +60,26 @@ def pregunta_02():
     ]
 
     """
-    return
+    letters_list = []
+    column = []
+    for row in csv_file:
+        _dist = row[0]
+        column.append(_dist)
+        if len(letters_list) == 0 or _dist not in letters_list:
+            letters_list.append(_dist)
+
+    letters_list.sort()
+    count = []
+    for letter in letters_list:
+        occurrences = column.count(letter)
+        count.append(occurrences)
+
+    res = []
+    for i in range(len(letters_list)):
+        tupple_rta = letters_list[i], count[i]
+        res.append(tupple_rta)
+
+    return res
 
 
 def pregunta_03():
@@ -57,9 +97,44 @@ def pregunta_03():
     ]
 
     """
-    return
+    letters_list = []
+    column = []
+    res = []
+    for row in csv_file:
+        _dist = row[0]
+        _value = row[1]
+        if len(letters_list) == 0 or _dist not in letters_list:
+            letters_list.append(_dist)
+            column.append(_value)
+            index = letters_list.index(_dist)
+            tupple_rta = letters_list[index], column[index]
+            res.append(tupple_rta)
+            continue
+        if _dist in letters_list:
+            index = letters_list.index(_dist)
+            tupple_rta = letters_list[index], column[index]
+            res.remove(tupple_rta)
+            column[index] = int(column[index]) + int(_value)
+            tupple_rta = letters_list[index], column[index]
+            res.append(tupple_rta)
 
+    res.sort()
+    """ for items in res:
+        print(items) """
+        
+    return res
 
+def reducer_small_data(sequence):
+    contador = {}
+    for key, value in sequence:
+        contador[key] = contador.get(key, 0) + value
+    return list(contador.items())
+
+def shuffle_and_sort(sequence):
+    f = itemgetter(0)
+    sequence = sorted(sequence, key=f)
+    return sequence
+   
 def pregunta_04():
     """
     La columna 3 contiene una fecha en formato `YYYY-MM-DD`. Retorne la cantidad de
@@ -82,8 +157,15 @@ def pregunta_04():
     ]
 
     """
-    return
+    column = []
+    for row in csv_file:
+        _value = row[2]
+        splited_value = _value.split("-")
+        column.append((splited_value[1],1))
 
+    res = reducer_small_data(column)
+
+    return shuffle_and_sort(res)
 
 def pregunta_05():
     """
@@ -100,8 +182,18 @@ def pregunta_05():
     ]
 
     """
-    return
-
+    grouped_max_min_list = []
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[0]), key=lambda x: x[0]):
+        max_elm = float("-inf")
+        min_elm = float("inf")
+        for string_elm in group:
+            num_elm = int(string_elm[1])
+            if num_elm > max_elm:
+                max_elm = num_elm
+            if num_elm < min_elm:
+                min_elm = num_elm
+        grouped_max_min_list.append((key, max_elm, min_elm))
+    return grouped_max_min_list
 
 def pregunta_06():
     """
@@ -125,8 +217,21 @@ def pregunta_06():
     ]
 
     """
-    return
-
+    grouped_max_min_list = []
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[4]), key=lambda x: x[4]):
+        for string_elm in group:
+            elm = string_elm[4].split(',')
+            max_elm = float("-inf")
+            min_elm = float("inf")
+            for _elm in elm:
+                el_ = _elm.split(':')
+                num_elm = int(el_[1])
+                if num_elm > max_elm:
+                    max_elm = num_elm
+                if num_elm < min_elm:
+                    min_elm = num_elm
+                grouped_max_min_list.append((el_[0], max_elm, min_elm))
+    return grouped_max_min_list
 
 def pregunta_07():
     """
@@ -149,8 +254,13 @@ def pregunta_07():
     ]
 
     """
-    return
-
+    grouped_max_min_list = []
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[1]), key=lambda x: x[1]):
+        letters = []
+        for string_elm in group:
+            letters.append(string_elm[0])
+        grouped_max_min_list.append((int(key), letters))
+    return grouped_max_min_list
 
 def pregunta_08():
     """
@@ -174,8 +284,15 @@ def pregunta_08():
     ]
 
     """
-    return
-
+    grouped_max_min_list = []
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[1]), key=lambda x: x[1]):
+        letters = []
+        for string_elm in group:
+            if(string_elm[0] not in letters):
+                letters.append(string_elm[0])
+        letters.sort()        
+        grouped_max_min_list.append((int(key), letters))
+    return grouped_max_min_list
 
 def pregunta_09():
     """
@@ -197,8 +314,19 @@ def pregunta_09():
     }
 
     """
-    return
-
+    grouped_dict = {}
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[4]), key=lambda x: x[4]):
+        elements = key.split(',')
+        for el in elements:
+            key = el.split(":")[0]
+            if(key not in grouped_dict ):
+                grouped_dict.update({key: 0})
+            if(key in grouped_dict):
+                new_val = grouped_dict.get(key) + 1
+                grouped_dict.update({key: new_val})
+    sorted_list = sorted(grouped_dict.items())
+    d = dict((sorted_list[i]) for i in range(len(sorted_list)))
+    return d
 
 def pregunta_10():
     """
@@ -218,8 +346,13 @@ def pregunta_10():
 
 
     """
-    return
-
+    grouped_list = []
+    for row in csv_file:
+        print(row)
+        col4 = row[3].split(',')
+        col5 = row[4].split(',')
+        grouped_list.append((row[0], len(col4),  len(col5)))
+    return grouped_list
 
 def pregunta_11():
     """
@@ -239,8 +372,19 @@ def pregunta_11():
 
 
     """
-    return
-
+    grouped_dict = {}
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[3]), key=lambda x: x[3]):
+        for el in group:
+            el_key = el[3].split(',')
+            for el_ in el_key:
+                if(el_ not in grouped_dict ):
+                    grouped_dict.update({el_ : int(el[1])})
+                if(el_ in grouped_dict):
+                    new_val = int(grouped_dict.get(el_)) + int(el[1])
+                    grouped_dict.update({el_ : new_val})
+    sorted_list = sorted(grouped_dict.items())
+    d = dict((sorted_list[i]) for i in range(len(sorted_list)))
+    return d
 
 def pregunta_12():
     """
@@ -257,4 +401,15 @@ def pregunta_12():
     }
 
     """
-    return
+    grouped_dict = {}
+    for key, group in groupby(sorted(csv_file, key=lambda x: x[0]), key=lambda x: x[0]):
+        value = 0
+        for el in group:      
+            el_values = el[4].split(',')
+            for el_ in el_values:
+                el_val = el_.split(':')
+                value = value + int(el_val[1])
+            grouped_dict.update({key: value})    
+    sorted_list = sorted(grouped_dict.items())
+    d = dict((sorted_list[i]) for i in range(len(sorted_list)))
+    return d
